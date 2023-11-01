@@ -4,12 +4,12 @@ import torch
 from tqdm import tqdm
 
 param = {
-    "target" : "./data/Goethe_Lifemask.obj",
+    "target" : "./data/John_the_Baptist.obj",
     "resolution" : [512, 512],
     "geometry" : {
         "iter" : 200,
         "lr" : 2e-2,
-        "max_vertices" : 5000,
+        "max_vertices" : 1000,
     },
     "texture" : {
         "iter" : 300,
@@ -33,11 +33,12 @@ def optimize_mesh(renderer, ref, param):
     optim = geometry.MeshOptimizer(opt_v, opt_f.type(torch.long), max_vertices=param["max_vertices"])
     opt_v = optim.vertices
 
-    for _ in range(param["iter"] + 1):
+    for i in range(param["iter"] + 1):
 
         optim.zero_grad()
         opt_n = geometry.calc_vertex_normals(opt_v, opt_f.type(torch.long))
         opt_img = renderer.render_normal(opt_v, opt_f.type(torch.int32), opt_n, opt_f.type(torch.int32))
+        
         loss = torch.mean((ref_img - opt_img).abs()) # L2 pixel loss.
         loss.backward()
         optim.step()
@@ -77,7 +78,7 @@ def optimize_texture_normal(renderer, ref, opt, param):
 
     optimizer = torch.optim.Adam([opt_texture["normal"]], lr=param["lr"])
     scheduler = torch.optim.lr_scheduler.LambdaLR(optimizer, lr_lambda=lambda x: param["lr_ramp"]**(float(x)/float(param["iter"])))
-    for _ in range(param["iter"] + 1):
+    for i in range(param["iter"] + 1):
 
         opt_img = renderer.render_texture_normal(v, v_idx, n, v_idx, t, t_idx, opt_texture)
 
@@ -97,8 +98,9 @@ def optimize():
     global pbar
     pbar = tqdm(total=param["geometry"]["iter"] + param["texture"]["iter"], desc="Task progress", unit="units")
     
-    mv, proj = func.make_star_cameras(7, 7, image_size=[1024, 1024])
+    mv, proj = func.make_star_cameras(7, 7, image_size=param["resolution"])
     renderer = render.Rasterizer(mv, proj, param["resolution"])
+    # return
     ref = func.load_obj(param["target"])
     opt = optimize_mesh(renderer, ref, param["geometry"])
     tex = optimize_texture_normal(renderer, ref, opt, param["texture"])
@@ -107,6 +109,7 @@ def optimize():
 
     # save
     func.save_obj(opt[0], opt[1], opt[4], opt[5], f"result_{param['geometry']['max_vertices']}.obj")
+    # texture.save_image(f"result_{param['geometry']['max_vertices']}.png", ((tex["normal"]+1)*0.5).detach().cpu().numpy())
     texture.save_image(f"result_{param['geometry']['max_vertices']}.png", ((tex["normal"]+1)*0.5).detach().cpu().numpy())
     return
 
