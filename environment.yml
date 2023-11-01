@@ -1,0 +1,17 @@
+name: lod
+channels:
+  - defaults
+  - conda-forge
+  - pytorch
+dependencies:
+  - python=3.10.12
+  - pytorch=1.12.1
+  - pytorch-scatter=2.0.9
+  - trimesh
+  - cudatoolkit=11.3.1
+  - pip:
+    - numpy
+    - ninja
+    - nvdiffrast
+    - tqdm
+    - imageio
