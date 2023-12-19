@@ -9,8 +9,13 @@ These contain total two processes.
 ## dependencies
 [cuda 11.3 windows](https://developer.nvidia.com/cuda-11.3.0-download-archive?target_os=Windows).
 I did'nt test the other version of cuda.
+[nvdiffrast](https://github.com/NVlabs/nvdiffrast)
+Nvidia differentiable rasterization. Please refer to installation.
 
 ## Install
+```
+git clone --recursive https://github.com/hyeonjang/auto-static-lod
+```
 with conda
 `window`
 ```
