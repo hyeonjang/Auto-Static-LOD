@@ -6,6 +6,10 @@ These contain total two processes.
 1. Create low resolution mesh of the high from template mesh.
 2. Create normal map of low resolution mesh by difference between high and low
 
+## dependencies
+[cuda 11.3 windows](https://developer.nvidia.com/cuda-11.3.0-download-archive?target_os=Windows).
+I did'nt test the other version of cuda.
+
 ## Install
 with conda
 `window`
