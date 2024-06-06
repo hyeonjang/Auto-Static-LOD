@@ -1,4 +1,4 @@
-# auto-static-lod
+# Auto Static LOD
 
 This repo generates automatically LOD and normal map of high resolution mesh
 by using differentable rasterization, this repo can generate statically LOD and normal from high resolution mesh input.
@@ -9,7 +9,7 @@ These contain total two processes.
 ## dependencies
 [cuda 11.3 windows](https://developer.nvidia.com/cuda-11.3.0-download-archive?target_os=Windows)
 [nvdiffrast](https://github.com/NVlabs/nvdiffrast),
-I did'nt test the other version of cuda.
+I didn't test the other version of cuda.
 The utilized differentiable renderer is nvidia differentiable rasterizer.
 High-level functionality was implemented by pytorch. The other dependencies are included in `environment.yml`, which not indicated here.
 
